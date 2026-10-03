@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Absensi Remaja Masjid</title>
+    <!-- Menggunakan Font Google agar tampilan lebih estetik -->
+    <link href="https://googleapis.com" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2e7d32;
+            --primary-light: #4caf50;
+            --bg-color: #f1f8e9;
+            --text-color: #333;
+            --card-bg: #ffffff;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            background: var(--card-bg);
+            width: 100%;
+            max-width: 500px;
+            padding: 40px 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(46, 125, 50, 0.15);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Dekorasi Aksen Masjid Modern */
+        .container::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 8px;
+            background: linear-gradient(90deg, var(--primary-color), var(--primary-light));
+        }
+
+        .logo-area {
+            font-size: 3rem;
+            margin-bottom: 10px;
+        }
+
+        h2 {
+            color: var(--primary-color);
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        p.subtitle {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            text-align: left;
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #444;
+            font-size: 0.9rem;
+        }
+
+        input[type="text"],
+        select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            outline: none;
+            background-color: #fafafa;
+        }
+
+        input[type="text"]:focus,
+        select:focus {
+            border-color: var(--primary-light);
+            background-color: #fff;
+            box-shadow: 0 0 0 4px rgba(76, 175, 80, 0.1);
+        }
+
+        /* Styling khusus untuk Radio Button / Pilihan Kehadiran */
+        .status-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 5px;
+        }
+
+        .status-option {
+            position: relative;
+        }
+
+        .status-option input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+            height: 0;
+            width: 0;
+        }
+
+        .status-label {
+            display: block;
+            text-align: center;
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+            background: #fff;
+        }
+
+        .status-option input:checked + .status-label {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            color: white;
+            box-shadow: 0 4px 10px rgba(46, 125, 50, 0.3);
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(46, 125, 50, 0.3);
+            transition: all 0.3s ease;
+            margin-top: 15px;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(46, 125, 50, 0.4);
+        }
+
+        .btn-submit:active {
+            transform: translateY(0);
+        }
+
+        footer {
+            margin-top: 25px;
+            font-size: 0.75rem;
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- Icon/Emoji sebagai pengganti logo masjid -->
+    <div class="logo-area">🕌</div>
+    
+    <h2>Absensi Remaja Masjid</h2>
+    <p class="subtitle">Silakan isi kehadiran kamu untuk kegiatan hari ini</p>
+
+    <form id="absensiForm" onsubmit="simpanAbsen(event)">
+        <!-- Input Nama -->
+        <div class="form-group">
+            <label for="nama">Nama Lengkap</label>
+            <input type="text" id="nama" placeholder="Masukkan nama kamu" required>
+        </div>
+
+        <!-- Dropdown Kegiatan -->
+        <div class="form-group">
+            <label for="kegiatan">Kegiatan</label>
+            <select id="kegiatan" required>
+                <option value="" disabled selected>Pilih kegiatan...</option>
+                <option value="Kajian Rutin">Kajian Rutin Mingguan</option>
+                <option value="Rapat Pengurus">Rapat Pengurus</option>
+                <option value="Kerja Bakti">Bersih-bersih Masjid</option>
+                <option value="Latihan Hadroh">Latihan Hadroh / Rebana</option>
+            </select>
+        </div>
+
+        <!-- Pilihan Kehadiran Bermodel Kartu -->
+        <div class="form-group">
+            <label>Status Kehadiran</label>
+            <div class="status-container">
+                <div class="status-option">
+                    <input type="radio" id="hadir" name="status" value="Hadir" checked>
+                    <label for="hadir" class="status-label">Hadir</label>
+                </div>
+                <div class="status-option">
+                    <input type="radio" id="izin" name="status" value="Izin">
+                    <label for="izin" class="status-label">Izin</label>
+                </div>
+                <div class="status-option">
+                    <input type="radio" id="sakit" name="status" value="Sakit">
+                    <label for="sakit" class="status-label">Sakit</label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Keterangan Tambahan -->
+        <div class="form-group">
+            <label for="keterangan">Keterangan (Opsional)</label>
+            <input type="text" id="keterangan" placeholder="Alasan jika izin/sakit atau catatan lain">
+        </div>
+
+        <!-- Tombol Kirim -->
+        <button type="submit" class="btn-submit">Kirim Kehadiran</button>
+    </form>
+
+    <footer>
+        &copy; 2026 Ikatan Remaja Masjid. All Rights Reserved.
+    </footer>
+</div>
+
+<script>
+    function simpanAbsen(event) {
+        event.preventDefault();
+        
+        // Mengambil data dari form
+        const nama = document.getElementById('nama').value;
+        const kegiatan = document.getElementById('kegiatan').value;
+        const status = document.querySelector('input[name="status"]:checked').value;
+        const keterangan = document.getElementById('keterangan').value;
+
+        // Contoh aksi ketika form dikirim (bisa dihubungkan ke WhatsApp atau Google Sheets)
+        alert(`Alhamdulillah, data absen berhasil terkirim!\n\nNama: ${nama}\nKegiatan: ${kegiatan}\nStatus: ${status}`);
+        
+        // Reset form setelah sukses
+        document.getElementById('absensiForm').reset();
+    }
+</script>
+
+</body>
+</html>
